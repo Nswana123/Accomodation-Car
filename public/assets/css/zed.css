@@ -1,0 +1,194 @@
+.logo-title {
+    font-size: 24px !important;;
+    font-weight: bold !important;;
+    color: #5b2c6f !important;
+  }
+  
+  .logo-title .highlight {
+    color: #f26b07 !important; /* Makes the "M" blue */
+    font-weight: bolder !important;;
+  }
+  .table-responsive {
+    overflow-y: auto;
+    height: 600px !important;
+
+  }
+    .ck-editor__editable {
+        min-height: 400px; /* Adjust the height here */
+    }
+  
+    .gradient-custom-2 {
+    /* fallback for old browsers */
+    background: #fccb90;
+    
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
+    
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
+    }
+    .logo-image {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+     
+        width:100px;
+    }
+    
+    @media (min-width: 768px) {
+    .gradient-form {
+    height: 100vh !important;
+    }
+    }
+    @media (min-width: 769px) {
+    .gradient-custom-2 {
+    border-top-right-radius: .3rem;
+    border-bottom-right-radius: .3rem;
+    }
+    }
+  
+    .table-wrapper {
+      max-height: 400px; /* Adjust the height as needed */
+      overflow-y: auto;
+      display: block;
+  }
+
+
+  .table-wrapper tbody {
+      max-height: 300px; /* Set max height for body */
+      overflow-y: scroll;
+      overflow-x: scroll;
+  }
+  .link-blue{
+    color:#87CEEB !important;
+  }
+.border-yellow {
+  border-color: #facc15 !important;
+}
+
+
+  .filter-skyblue {
+    filter: brightness(0) saturate(100%) invert(66%) sepia(32%) saturate(2413%) hue-rotate(165deg) brightness(102%) contrast(95%);
+  }
+  .btn-outline-skyblue {
+  color: #87CEEB;
+  border-color: #87CEEB;
+}
+
+.btn-outline-skyblue:hover {
+  background-color: #87CEEB;
+  color: #fff;
+  border-color: #87CEEB;
+}
+
+
+.btn-yellow {
+  border-color: #facc15 !important;
+   background-color: #facc15;
+   color: #fff;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: skyblue !important;
+}
+.active {
+  background-color: skyblue !important; /* Dodger Blue */
+  color:#fff !important;
+}
+  .active:hover {
+  color:#fff !important;
+}
+.sidebar-toggle[data-active="true"] {
+  background-color: skyblue !important;
+  color: white !important; /* Optional: makes icon stand out */
+  border-radius: 6px; /* Optional: make it a little rounded */
+  padding: 6px; /* Optional: add spacing */
+  cursor: pointer;
+}
+
+/* Optional: change icon color specifically */
+.sidebar-toggle[data-active="true"] svg path {
+  stroke: white !important;
+}
+.nav-link:hover {
+    background-color: skyblue !important; /* Dodger Blue */
+  color: #fff !important;
+  transition: color 0.3s ease !important;
+}
+.btn-primary {
+  background-color: skyblue !important;
+  border-color: skyblue !important;
+  color: white; /* Ensure text is readable */
+}
+
+/* Optional: Darker sky blue on hover */
+.btn-primary:hover {
+  background-color: #00bfff !important; /* Deep Sky Blue */
+  border-color: #00bfff !important;
+}
+.btn-success {
+  background-color: yellow !important;
+  border-color: yellow !important;
+  color: #fff !important; /* Black text for contrast */
+}
+
+/* Optional: darker yellow on hover */
+.btn-success:hover {
+  background-color: gold !important;
+  border-color: gold !important;
+}
+
+.zoom-container {
+  position: relative;
+  overflow: hidden;
+  height: 600px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff !important;
+}
+
+.zoom-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+  padding: 10px;
+  z-index: 10;
+  font-size: 22px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+
+.zoomable-img {
+  max-width: 100%;
+  max-height: 100%;
+  transition: transform 0.3s ease;
+  image-rendering: auto;
+  object-fit: contain;
+  touch-action: none;
+}
+
+.zoomed {
+  transform: scale(2.5);
+  cursor: grab;
+}
+/* Optimize landscape image visibility on mobile */
+@media (max-width: 576px) {
+  .carousel-image-wrapper {
+    aspect-ratio: auto;
+    height: auto;
+    padding: 1rem 0;
+  }
+
+  .carousel-img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+  }
+}
