@@ -81,6 +81,28 @@
                     @endforeach
                 </select>
             </div>
+   <!-- Amenities -->
+        <div class="mb-3">
+            <label class="form-label">Amenities</label>
+            <div class="row">
+                <div class="col-md-12">
+                    @foreach($amenities as $amenity)
+                        <div class="form-check mb-2">
+                            <input 
+                                type="checkbox" 
+                                name="amenities[]" 
+                                value="{{ $amenity->id }}" 
+                                id="amenity_{{ $amenity->id }}"
+                                class="form-check-input"
+                            >
+                            <label class="form-check-label" for="amenity_{{ $amenity->id }}">
+                                {{ $amenity->name }}
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
 
             <div class="mb-3 col-12">
                 <label>Description</label>

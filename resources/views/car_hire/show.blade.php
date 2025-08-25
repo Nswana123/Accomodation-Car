@@ -2,6 +2,672 @@
 <html lang="en">
   @include('userdashboard.layout')
   <style>
+      :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --bg: #ffffff;
+            --bg-light: #f9fafb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f1f5f9;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .main-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: var(--bg);
+            box-shadow: var(--shadow-sm);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 4rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .logo-icon {
+            width: 1.75rem;
+            height: 1.75rem;
+            fill: var(--primary);
+        }
+
+        /* Mobile menu toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+
+        .hamburger {
+            display: block;
+            width: 1.5rem;
+            height: 2px;
+            background-color: var(--text);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger::before,
+        .hamburger::after {
+            content: '';
+            position: absolute;
+            width: 1.5rem;
+            height: 2px;
+            background-color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .hamburger::before {
+            top: -6px;
+        }
+
+        .hamburger::after {
+            top: 6px;
+        }
+
+        /* Navigation */
+        .primary-nav {
+            display: flex;
+        }
+
+        .nav-list {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--text);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        /* User actions */
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-form {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            width: 16rem;
+            transition: width 0.2s, box-shadow 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            width: 20rem;
+        }
+
+        .search-button {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        /* Auth buttons */
+        .auth-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            font-size: 0.875rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.8125rem;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--border);
+            color: var(--text);
+            background-color: transparent;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--bg-light);
+        }
+
+        .btn-primary {
+            border: 1px solid var(--primary);
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+        /* Main content */
+        .main-content {
+            padding: 2rem 1.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Hero section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                        url('https://static.independent.co.uk/2025/02/18/10/40/Kia-EV6.png?quality=75&width=1368&crop=3%3A2%2Csmart&trim=85%2C0%2C85%2C0&auto=webp');
+            background-size: cover;
+            background-position: center;
+            border-radius: var(--radius-lg);
+            padding: 4rem 2rem;
+            color: white;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Search filters */
+        .search-filters {
+            background-color: var(--bg);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1rem;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+        }
+
+        .search-btn {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Car listings */
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .view-all {
+            font-size: 0.9rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .car-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .car-card {
+            background: var(--bg);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .car-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .car-image-container {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .car-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .car-card:hover .car-image {
+            transform: scale(1.05);
+        }
+
+        .car-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background-color: var(--primary);
+            color: var(--bg);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .car-info {
+            padding: 1.5rem;
+        }
+
+        .car-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .car-price {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .car-specs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .car-spec {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .car-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .car-feature {
+            background-color: var(--bg-light);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .car-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .car-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: #f59e0b;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #222;
+            color: white;
+            padding: 3rem 1.5rem 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .footer-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .footer-social a {
+            color: white;
+            background-color: #333;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid #444;
+            color: #999;
+            font-size: 0.9rem;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* Mobile Bottom Nav */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            padding: 0.5rem 0;
+            z-index: 1000;
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-light);
+            font-size: 0.8rem;
+            flex: 1;
+        }
+
+        .mobile-nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .mobile-nav-item.active {
+            color: var(--primary);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: 10px;
+            background-color: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .search-input {
+                width: 12rem;
+            }
+            
+            .search-input:focus {
+                width: 16rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .primary-nav {
+                position: fixed;
+                top: 4rem;
+                left: 0;
+                right: 0;
+                background-color: var(--bg);
+                box-shadow: var(--shadow-md);
+                padding: 1rem;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-1rem);
+                transition: all 0.3s ease;
+            }
+            
+            .primary-nav.active {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+            
+            .nav-list {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .search-container {
+                display: none;
+                position: absolute;
+                top: 4rem;
+                left: 0;
+                right: 0;
+                padding: 1rem;
+                background-color: var(--bg);
+                box-shadow: var(--shadow-sm);
+            }
+            
+            .search-container.active {
+                display: block;
+            }
+            
+            .search-input {
+                width: 100%;
+            }
+            
+            .search-toggle {
+                display: block;
+            }
+            
+            .auth-buttons {
+                display: none;
+            }
+            
+            .mobile-nav {
+                display: flex;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-text {
+                display: none;
+            }
+
+            .hero {
+                padding: 3rem 1rem;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .car-grid {
+                grid-template-columns: 1fr;
+            }
+        }
 .hotel-header {
     height: 500px;
     position: relative;
@@ -555,321 +1221,69 @@
         @endforeach
     </div>
 
-    <button class="carousel-control-prev" type="button" data-bs-target="#hotelHeaderCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#hotelHeaderCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-    </button>
-</div>
-<section class="section">
-    <h2 class="section-title">Gallery</h2>
-    <div class="hotel-gallery">
-        @if($provider->images->count() > 0)
-            <div class="gallery-main">
-                <img id="mainGalleryImg" src="{{ asset('storage/' . $provider->images[0]->image) }}"
-                     alt="{{ $provider->name }} Image"
-                     class="gallery-img main-img">
-            </div>
-            <div class="gallery-thumbnails d-flex flex-wrap gap-2 mt-3">
-                @foreach($provider->images as $image)
-                    <div class="gallery-thumb">
-                        <img src="{{ asset('storage/' . $image->image) }}"
-                             alt="{{ $provider->name }} Thumbnail"
-                             class="gallery-img thumb-img"
-                             onclick="updateMainImage(this)">
+ 
+        <!-- Featured Cars -->
+        <section>
+            <h2 class="section-title">
+                Featured Vehicles
+                <a href="#" class="view-all">View all</a>
+            </h2>
+        </section>                  
+      
+   <div class="row">
+    @foreach($provider->unitType as $type)
+        @foreach($type->units as $unit)
+            <div class="col-md-3 mb-4"> <!-- 4 columns per row -->
+                <div class="car-card">
+                    <div class="car-image-container">
+                        @if($unit->images->count())
+                            <img src="{{ asset('storage/' . $unit->images->first()->image_path) }}" 
+                                 alt="{{ $unit->name }}" class="car-image">
+                        @else
+                            <img src="https://via.placeholder.com/300x200" alt="{{ $unit->name }}" class="car-image">
+                        @endif
+                        <div class="car-badge">Popular</div>
                     </div>
-                @endforeach
-            </div>
-        @else
-            <p>No images available for this provider.</p>
-        @endif
-    </div>
-</section>
-<!-- Description -->
-<section class="section">
-    <h2 class="section-title">About {{ $provider->name }}</h2>
-    <p>{{ $provider->description ?? 'No description available at the moment.' }}</p>
-</section>
-<!-- Amenities -->
-<section class="section">
-    <h2 class="section-title mb-4">Amenities</h2>
 
-    @php
-        $iconMap = [
-              'luxury' => 'fas fa-crown',
-                                'free wifi' => 'fas fa-wifi',
-                                'swimming pool' => 'fas fa-swimming-pool',
-                                'spa' => 'fas fa-spa',
-                                'restaurant' => 'fas fa-utensils',
-                                'gym' => 'fas fa-dumbbell',
-                                'bar' => 'fas fa-glass-martini-alt',
-                                'parking' => 'fas fa-parking',
-                                'air conditioning' => 'fas fa-fan',
-                                'laundry' => 'fas fa-soap',
-                                'tv' => 'fas fa-tv',
-                                'pet friendly' => 'fas fa-dog',
-        ];
-    @endphp
-
-    <div class="amenities-grid">
-        @foreach($provider->amenities as $amenity)
-            @php
-                $nameLower = strtolower($amenity->name);
-                $iconClass = $iconMap[$nameLower] ?? 'fas fa-check-circle';
-            @endphp
-            <div class="amenity-card">
-                <i class="{{ $iconClass }} amenity-icon"></i>
-                <div class="amenity-name">{{ $amenity->name }}</div>
-            </div>
-        @endforeach
-    </div>
-</section>
-
-<!-- Room Types -->
-<section class="section">
-    <h2 class="section-title">Room Categories</h2>
-    <div class="room-types">
-        @foreach($provider->unitType as $unitType)
-            @if($unitType->units->count() > 0)
-                <div class="room-card">
-                    <div class="room-summary">
-                        <div class="room-image-container">
-                            @if($unitType->images->first())
-                                <img src="{{ asset($unitType->images->first()->image) }}" alt="{{ $unitType->name }}" class="room-image">
-                            @else
-                                <img src="https://via.placeholder.com/300x200?text=No+Image" alt="No image available" class="room-image">
-                            @endif
+                    <div class="car-info">
+                        <div class="car-title">
+                            <h3>{{ $unit->name }}</h3>
+                            <span class="car-price">ZMW {{ number_format($unit->price_per_day, 2) }}/day</span>
                         </div>
-                        <div class="room-info">
-                            <div class="room-header">
-                                <h3 class="room-name">{{ $unitType->name }}</h3>
-                                <div class="room-availability">
-                                    <i class="fas fa-bed"></i>
-                                    <span>{{ $unitType->units->count() }} rooms available</span>
-                                </div>
-                            </div>
-                            <div class="room-price-container">
-                                <p class="room-price">ZMW {{ number_format($unitType->price, 2) }} <span class="price-subtext">/ night</span></p>
-                                <button class="toggle-details">Hide Details</button>
-                            </div>
+
+                        <div class="car-specs">
+                            <span class="car-spec"><i class="fas fa-car"></i> {{ $unit->type ?? 'N/A' }}</span>
+                            <span class="car-spec"><i class="fas fa-cogs"></i> {{ $unit->transmission ?? 'N/A' }}</span>
+                            <span class="car-spec"><i class="fas fa-gas-pump"></i> {{ $unit->fuel_type ?? 'N/A' }}</span>
                         </div>
-                    </div>
-                    <div class="room-details" style="display: block;">
-                        <p class="room-description">{{ $unitType->description }}</p>
-                        <div class="room-amenities">
-                            @foreach($unitType->amenities as $amenity)
-                                <span class="room-amenity">{{ $amenity->name }}</span>
+
+                        <div class="car-features">
+                            @foreach($unit->amenities as $amenity)
+                                <span class="car-feature">
+                                    <i class="{{ $amenity->icon ?? 'fas fa-check' }}"></i> {{ $amenity->name }}
+                                </span>
                             @endforeach
                         </div>
-                        
-                        <!-- Booking Form -->
-                        <div class="booking-form">
-                            @if ($errors->any())
-    <div class="alert alert-warning fade-in-up">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
 
-@if (session('success'))
-    <div class="alert alert-success fade-in-up">
-        {{ session('success') }}
-    </div>
-@endif 
-                               <h4 class="form-title">Book This Room</h4>
-    <form action="{{ route('bookings.store') }}" method="POST" class="booking-form-layout" id="bookingForm">
-    @csrf
-    <input type="hidden" name="unit_type_id" value="{{ $unitType->id }}">
-    
-    <!-- Left Column - Form Fields -->
-    <div class="form-fields-column">
-        <div class="form-group">
-            <label for="check-in-{{ $unitType->id }}">Check-in Date</label>
-            <div class="date-input">
-                <input type="date" id="check-in-{{ $unitType->id }}" name="check_in" class="form-control" required>
-                <span class="date-placeholder">dd / mm / yyyy</span>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label for="check-out-{{ $unitType->id }}">Check-out Date</label>
-            <div class="date-input">
-                <input type="date" id="check-out-{{ $unitType->id }}" name="check_out" class="form-control" required>
-                <span class="date-placeholder">dd / mm / yyyy</span>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label for="guests-{{ $unitType->id }}">Guests</label>
-            <select id="guests-{{ $unitType->id }}" name="guests" class="form-control" required>
-                @php
-                    $maxCapacity = $unitType->units->max('capacity') ?? $unitType->capacity;
-                @endphp
-                @for($i = 1; $i <= $maxCapacity; $i++)
-                    <option value="{{ $i }}" {{ $i == 1 ? 'selected' : '' }}>
-                        {{ $i }} {{ Str::plural('Adult', $i) }}
-                    </option>
-                @endfor
-            </select>
-        </div>
-    </div>
-    
-    <!-- Right Column - Room Selection -->
-    <div class="room-selection-column">
-        <h5>Available Rooms</h5>
-        <div class="unit-selection-grid">
-            @foreach($unitType->units as $unit)
-            <div class="unit-card">
-                <label class="unit-select-label">
-                    <input type="radio" name="unit_id" value="{{ $unit->id }}" required 
-                           class="unit-radio" data-daily-price="{{ $unit->price_per_day ?? $unitType->price }}" 
-                           {{ $loop->first ? 'checked' : '' }}>
-                    <div class="unit-card-content">
-                        <div class="unit-header">
-                            <h6>{{ $unit->name }}</h6>
-                            <span class="unit-price">ZMW {{ number_format($unit->price_per_day ?? $unitType->price, 2) }}</span>
-                        </div>
-                        <div class="unit-details">
-                            <div class="unit-feature">
-                                <i class="fas fa-users"></i>
-                                <span>Capacity: {{ $unit->capacity }}</span>
+                        <div class="car-actions">
+                            <div class="car-rating">
+                                <i class="fas fa-star"></i>
+                                <span>{{ $unit->rating ?? '4.8' }} ({{ $unit->reviews_count ?? '124' }})</span>
                             </div>
-                        </div>
-                    </div>
-                </label>
-            </div>
-            @endforeach
-        </div>
-    </div>
-    
-    <!-- Hidden payment fields -->
-    <input type="hidden" name="method" id="hiddenMethod">
-    <input type="hidden" name="amount" id="hiddenAmount">
-    <input type="hidden" name="payment_number" id="hiddenPaymentNumber">
-    <input type="hidden" name="reference" id="hiddenReference">
-    <input type="hidden" name="cardNumber" id="hiddenCardNumber">
-    <input type="hidden" name="cardExpiry" id="hiddenCardExpiry">
-    <input type="hidden" name="cardCVC" id="hiddenCardCVC">
-    <input type="hidden" name="bankName" id="hiddenBankName">
-    <input type="hidden" name="accountNumber" id="hiddenAccountNumber">
-    
-    <!-- Submit Button -->
-    <div class="form-submit-column">
-        <button type="button" class="book-now-btn" data-bs-toggle="modal" data-bs-target="#payBookModal">
-            <i class="fas fa-calendar-check"></i> Book {{ $unitType->name }}
-        </button>
-    </div>
-</form>
-
-    <!-- Pay & Book Modal -->
-<div class="modal fade" id="payBookModal" tabindex="-1" aria-labelledby="payBookModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="payBookModalLabel">Complete Your Booking & Payment</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
- <div class="mb-4">
-                    <h6>Booking Summary</h6>
-                    <div id="bookingSummary">
-                        <!-- Will be populated by JavaScript -->
-                    </div>
-                </div>
-                <!-- Payment Form -->
-                <div class="mb-4">
-                    <label for="paymentMode" class="form-label">Payment Mode</label>
-                    <select class="form-select" id="paymentMode" name="method" required>
-                        <option value="" selected disabled>Select Payment Mode</option>
-                         <option value="Cash">Cash</option>
-                        <option value="mobile_money_payment">Mobile Money Payment</option>
-                        <option value="card">Credit/Debit Card</option>
-                        <option value="bank_transfer">Bank Transfer</option>
-                    </select>
-                    <div class="invalid-feedback">Please select a payment mode.</div>
-                </div>
-
-                <!-- Payment Amount -->
-               <div class="mb-4">
-    <label for="paymentAmount" class="form-label">Amount (ZMK)</label>
-    <input type="number" 
-           class="form-control" 
-           id="paymentAmount" 
-           name="amount" 
-           min="0" 
-           step="0.01" 
-           required 
-           value="{{ $unitType->units->first()->price_per_day ?? $unitType->price }}">
-</div>
-
-                <!-- Mobile Money -->
-                <div id="mobileMoneyDetails" style="display:none;">
-                    <div class="mb-3">
-                        <label for="paymentNumber" class="form-label">Mobile Money Number</label>
-                        <input type="text" class="form-control" id="paymentNumber" name="payment_number">
-                    </div>
-                    <div class="mb-3">
-                        <label for="paymentReference" class="form-label">Transaction Reference</label>
-                        <input type="text" class="form-control" id="paymentReference" name="reference">
-                    </div>
-                </div>
-
-                <!-- Card Payment -->
-                <div id="cardDetails" style="display:none;">
-                    <div class="mb-3">
-                        <label for="cardNumber" class="form-label">Card Number</label>
-                        <input type="text" class="form-control" id="cardNumber" name="cardNumber" maxlength="19">
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="cardExpiry" class="form-label">Expiry Date (MM/YY)</label>
-                            <input type="text" class="form-control" id="cardExpiry" name="cardExpiry" maxlength="5">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="cardCVC" class="form-label">CVC</label>
-                            <input type="text" class="form-control" id="cardCVC" name="cardCVC" maxlength="4">
+                            <button class="btn btn-primary btn-sm">Book Now</button>
                         </div>
                     </div>
                 </div>
-
-                <!-- Bank Transfer -->
-                <div id="bankTransferDetails" style="display:none;">
-                    <div class="mb-3">
-                        <label for="bankName" class="form-label">Bank Name</label>
-                        <input type="text" class="form-control" id="bankName" name="bankName">
-                    </div>
-                    <div class="mb-3">
-                        <label for="accountNumber" class="form-label">Account Number</label>
-                        <input type="text" class="form-control" id="accountNumber" name="accountNumber">
-                    </div>
-                    <div class="mb-3">
-                        <label for="transactionReference" class="form-label">Transaction Reference</label>
-                        <input type="text" class="form-control" id="transactionReference" name="reference">
-                    </div>
-                </div>
-
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" id="initiatePaymentBtn" class="btn btn-info">
-                    <i class="bi bi-credit-card me-2"></i> Process Payment
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-                        </div>
-                    </div>
-                </div>
-            @endif
         @endforeach
+    @endforeach
+</div>
+
+
+</div>
+
     </div>
-</section>
+
     <!-- Mobile Bottom Nav -->
    
       @include('userdashboard.nav')

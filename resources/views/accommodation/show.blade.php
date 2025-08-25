@@ -644,7 +644,7 @@
                         <div class="room-info">
                             <div class="room-header">
                                 <h3 class="room-name">{{ $unitType->name }}</h3>
-                                <div class="room-availability">
+                                <div class="room-availability"> 
                                     <i class="fas fa-bed"></i>
                                     <span>{{ $unitType->units->count() }} rooms available</span>
                                 </div>

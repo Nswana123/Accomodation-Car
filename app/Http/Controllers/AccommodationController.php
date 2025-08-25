@@ -73,17 +73,18 @@ public function show($id)
     return view('accommodation.show', compact('provider'));
 }
 
-public function showCarhire($id)
+public function showCarhire($id) 
 {
     $provider = AccommodationProvider::with([
         'images',
         'unitType.units' => function($query) {
-        $query->where('status', 'Available')
-              ->select('id', 'name', 'price_per_day','unit_type_id','capacity');
-    },
-        'amenities' // if you want to include suites too
+            $query->where('status', 'Available')
+                  ->select('id', 'name', 'price_per_day', 'unit_type_id', 'capacity');
+        },
+        'amenities'
     ])->findOrFail($id);
 
     return view('car_hire.show', compact('provider'));
 }
+
 }

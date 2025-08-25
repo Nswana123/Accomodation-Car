@@ -17,5 +17,10 @@ class Amenity extends Model
 {
     return $this->belongsToMany(UnitType::class);
 }
+public function units()
+{
+    return $this->belongsToMany(Unit::class, 'amenity_unit');
+}
+
 
 }

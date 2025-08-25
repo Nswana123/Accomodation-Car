@@ -5,6 +5,7 @@ use App\Models\Unit;
 use App\Models\AccommodationProvider;
 use App\Models\UnitImage;
 use App\Models\UnitType;
+use App\Models\Amenity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,7 +13,7 @@ class UnitController extends Controller
 {
     public function index()
     {
-        $units = Unit::with([ 'unitType', 'images'])->latest()->get();
+        $units = Unit::with([ 'unitType', 'images','amenities'])->latest()->get();
           $user = auth()->user();
     $permissions = $user->user_group->permissions;
         return view('units.index', compact('units','permissions'));
@@ -21,26 +22,32 @@ class UnitController extends Controller
     public function create()
     {
         $providers = AccommodationProvider::all();
-           $unitTypes = UnitType::all();
+        $unitTypes = UnitType::all();
+        $amenities = Amenity::all();
           $user = auth()->user();
     $permissions = $user->user_group->permissions;
-        return view('units.create', compact('providers','permissions','unitTypes'));
+        return view('units.create', compact('providers','permissions','unitTypes','amenities'));
     }
 
  public function store(Request $request)
 {
-    $request->validate([
+      $validated = $request->validate([
         'name' => 'required',
         'unit_type_id' => 'required|exists:unit_types,id',
         'capacity' => 'required|integer',
         'price_per_day' => 'required|numeric',
         'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         'image_titles.*' => 'nullable|string',
+         'amenities' => 'array',
+            'amenities.*' => 'exists:amenities,id',
     ]);
 
     $unit = Unit::create($request->only([
         'name', 'unit_type_id', 'capacity', 'price_per_day', 'description'
     ]));
+       if ($request->has('amenities')) {
+            $unitType->amenities()->attach($request->amenities);
+        }
 
     if ($request->hasFile('images')) {
         foreach ($request->file('images') as $index => $file) {
@@ -60,22 +67,25 @@ class UnitController extends Controller
     public function edit(Unit $unit)
     {
         $providers = AccommodationProvider::all();
-               $unitTypes = UnitType::all();
+        $unitTypes = UnitType::all();
+        $amenities = Amenity::all();
         $unit->load('images');
           $user = auth()->user();
     $permissions = $user->user_group->permissions;
-        return view('units.edit', compact('unit', 'providers','permissions','unitTypes'));
+        return view('units.edit', compact('unit', 'providers','permissions','unitTypes','amenities'));
     }
 
     public function update(Request $request, Unit $unit)
     {
-         $request->validate([
+         $validated = $request->validate([
             'unit_type_id' => 'required|exists:unit_types,id',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price_per_day' => 'required|numeric|min:0',
             'images.*.file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'images.*.title' => 'nullable|string|max:255',
+              'amenities' => 'array',
+            'amenities.*' => 'exists:amenities,id',
         ]);
 
         $unit->update([
@@ -84,7 +94,11 @@ class UnitController extends Controller
             'description' => $request->description,
             'price_per_day' => $request->price_per_day,
         ]);
-
+        if ($request->has('amenities')) {
+            $unit->amenities()->sync($validated['amenities']);
+        } else {
+            $unit->amenities()->detach(); // Remove all if none selected
+        }
         if ($request->has('images')) {
             foreach ($request->images as $image) {
                 if (isset($image['file'])) {

@@ -26,4 +26,9 @@ class Unit extends Model
     {
         return $this->hasMany(UnitSuiteItem::class);
     }
+    public function amenities()
+{
+    return $this->belongsToMany(Amenity::class, 'amenity_unit');
+}
+
 }

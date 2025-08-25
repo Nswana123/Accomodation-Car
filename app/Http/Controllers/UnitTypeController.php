@@ -38,7 +38,7 @@ class UnitTypeController extends Controller
             'description' => 'nullable|string',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'amenities' => 'array',
-            'amenities.*' => 'exists:amenities,id',
+            'amenities.*' => 'exists:amenities,id', 
         ]);
 
         $unitType = UnitType::create($request->only('name', 'provider_id', 'description'));
