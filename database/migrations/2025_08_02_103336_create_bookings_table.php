@@ -13,6 +13,8 @@ class CreateBookingsTable extends Migration
             $table->foreignId('customer_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('unit_id')->nullable()->constrained('units')->onDelete('set null');
             $table->foreignId('suite_id')->nullable()->constrained('unit_suites')->onDelete('set null');
+            $table->string('pickup')->nullable();
+            $table->string('destination')->nullable();
             $table->date('check_in_date');
             $table->date('check_out_date');
             $table->string('guests');

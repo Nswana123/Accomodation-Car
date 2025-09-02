@@ -1159,130 +1159,261 @@
   @include('userdashboard.header')
 
     <!-- Main Content -->
-  <main class="main-content" role="main">
-<div id="hotelHeaderCarousel" class="carousel slide hotel-header" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        @foreach($provider->images as $key => $image)
-            <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                <div class="carousel-background" style="background-image: url('{{ asset('storage/' . $image->image) }}');">
-                    <div class="overlay"></div>
+<main class="main-content" role="main">
+    <div id="hotelHeaderCarousel" class="carousel slide hotel-header" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            @foreach($provider->images as $key => $image)
+                <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                    <div class="carousel-background" style="background-image: url('{{ asset('storage/' . $image->image) }}');">
+                        <div class="overlay"></div>
 
-                    <!-- Hotel Header Content Overlay -->
-                    <div class="hotel-header-content text-white d-flex flex-column justify-content-center h-100 p-5">
-                        <h1 class="hotel-title">{{ $provider->name }}</h1>
+                        <!-- Hotel Header Content Overlay -->
+                        <div class="hotel-header-content text-white d-flex flex-column justify-content-center h-100 p-5">
+                            <h1 class="hotel-title">{{ $provider->name }}</h1>
 
-                        <div class="hotel-location-rating my-2">
-                            <div class="hotel-location mb-1">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>{{ $provider->location }}</span>
-                            </div>
-                            <div class="hotel-rating">
-                                <div class="stars text-warning">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
+                            <div class="hotel-location-rating my-2">
+                                <div class="hotel-location mb-1">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>{{ $provider->location }}</span>
                                 </div>
-                                <span class="text-light">4.6 (342 reviews)</span>
-                            </div>
-                        </div>
-
-                        @php
-                            $iconMap = [
-                                'luxury' => 'fas fa-crown',
-                                'free wifi' => 'fas fa-wifi',
-                                'swimming pool' => 'fas fa-swimming-pool',
-                                'spa' => 'fas fa-spa',
-                                'restaurant' => 'fas fa-utensils',
-                                'gym' => 'fas fa-dumbbell',
-                                'bar' => 'fas fa-glass-martini-alt',
-                                'parking' => 'fas fa-parking',
-                                'air conditioning' => 'fas fa-fan',
-                                'laundry' => 'fas fa-soap',
-                                'tv' => 'fas fa-tv',
-                                'pet friendly' => 'fas fa-dog',
-                            ];
-                        @endphp
-
-                        <div class="hotel-badges mt-3 d-flex flex-wrap">
-                            @foreach($provider->amenities as $amenity)
-                                @php
-                                    $name = is_object($amenity) ? strtolower($amenity->name) : strtolower($amenity);
-                                    $icon = $iconMap[$name] ?? 'fas fa-check-circle';
-                                @endphp
-                                <div class="badge bg-light text-dark me-2 mb-2 px-3 py-1 rounded-pill d-flex align-items-center gap-2">
-                                    <i class="{{ $icon }}"></i>
-                                    <span>{{ ucwords($name) }}</span>
+                                <div class="hotel-rating">
+                                    <div class="stars text-warning">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <span class="text-light">4.6 (342 reviews)</span>
                                 </div>
-                            @endforeach
+                            </div>
+
+                            @php
+                                $iconMap = [
+                                    'luxury' => 'fas fa-crown',
+                                    'free wifi' => 'fas fa-wifi',
+                                    'swimming pool' => 'fas fa-swimming-pool',
+                                    'spa' => 'fas fa-spa',
+                                    'restaurant' => 'fas fa-utensils',
+                                    'gym' => 'fas fa-dumbbell',
+                                    'bar' => 'fas fa-glass-martini-alt',
+                                    'parking' => 'fas fa-parking',
+                                    'air conditioning' => 'fas fa-fan',
+                                    'laundry' => 'fas fa-soap',
+                                    'tv' => 'fas fa-tv',
+                                    'pet friendly' => 'fas fa-dog',
+                                ];
+                            @endphp
+
+                            <div class="hotel-badges mt-3 d-flex flex-wrap">
+                                @foreach($provider->amenities as $amenity)
+                                    @php
+                                        $name = is_object($amenity) ? strtolower($amenity->name) : strtolower($amenity);
+                                        $icon = $iconMap[$name] ?? 'fas fa-check-circle';
+                                    @endphp
+                                    <div class="badge bg-light text-dark me-2 mb-2 px-3 py-1 rounded-pill d-flex align-items-center gap-2">
+                                        <i class="{{ $icon }}"></i>
+                                        <span>{{ ucwords($name) }}</span>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        @endforeach
+            @endforeach
+        </div>
     </div>
 
- 
-        <!-- Featured Cars -->
-        <section>
-            <h2 class="section-title">
-                Featured Vehicles
-                <a href="#" class="view-all">View all</a>
-            </h2>
-        </section>                  
-      
-   <div class="row">
+    <!-- Featured Cars -->
+    <section class="mt-5">
+        <h2 class="section-title">
+            Featured Vehicles
+            <a href="#" class="view-all">View all</a>
+        </h2>
+ <!-- Booking Form -->
+                        <div class="booking-form">
+                            @if ($errors->any())
+    <div class="alert alert-warning fade-in-up">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+@if (session('success'))
+    <div class="alert alert-success fade-in-up">
+        {{ session('success') }}
+    </div>
+@endif 
+     <div class="row">
     @foreach($provider->unitType as $type)
         @foreach($type->units as $unit)
             <div class="col-md-3 mb-4"> <!-- 4 columns per row -->
                 <div class="car-card">
+                    
+                    <!-- Car Image -->
                     <div class="car-image-container">
                         @if($unit->images->count())
                             <img src="{{ asset('storage/' . $unit->images->first()->image_path) }}" 
-                                 alt="{{ $unit->name }}" class="car-image">
+                                 alt="{{ $unit->name }}" 
+                                 class="car-image">
                         @else
-                            <img src="https://via.placeholder.com/300x200" alt="{{ $unit->name }}" class="car-image">
+                            <img src="https://via.placeholder.com/300x200" 
+                                 alt="{{ $unit->name }}" 
+                                 class="car-image">
                         @endif
                         <div class="car-badge">Popular</div>
                     </div>
 
+                    <!-- Car Info -->
                     <div class="car-info">
-                        <div class="car-title">
-                            <h3>{{ $unit->name }}</h3>
-                            <span class="car-price">ZMW {{ number_format($unit->price_per_day, 2) }}/day</span>
+                        
+                        <!-- Title & Price -->
+                        <div class="car-title d-flex justify-content-between align-items-center">
+                            <h3 class="mb-0">{{ $unit->name }}</h3>
+                            <span class="car-price">
+                                ZMW {{ number_format($unit->price_per_day, 2) }}/day
+                            </span>
                         </div>
 
-                        <div class="car-specs">
-                            <span class="car-spec"><i class="fas fa-car"></i> {{ $unit->type ?? 'N/A' }}</span>
-                            <span class="car-spec"><i class="fas fa-cogs"></i> {{ $unit->transmission ?? 'N/A' }}</span>
-                            <span class="car-spec"><i class="fas fa-gas-pump"></i> {{ $unit->fuel_type ?? 'N/A' }}</span>
+                        <!-- Specs -->
+                        <div class="car-specs mt-2">
+                            <span class="car-spec">
+                                <i class="fas fa-car"></i> {{ $unit->type ?? 'N/A' }}
+                            </span>
+                            <span class="car-spec">
+                                <i class="fas fa-cogs"></i> {{ $unit->transmission ?? 'N/A' }}
+                            </span>
+                            <span class="car-spec">
+                                <i class="fas fa-gas-pump"></i> {{ $unit->fuel_type ?? 'N/A' }}
+                            </span>
                         </div>
 
-                        <div class="car-features">
-                            @foreach($unit->amenities as $amenity)
-                                <span class="car-feature">
-                                    <i class="{{ $amenity->icon ?? 'fas fa-check' }}"></i> {{ $amenity->name }}
-                                </span>
-                            @endforeach
-                        </div>
-
-                        <div class="car-actions">
-                            <div class="car-rating">
-                                <i class="fas fa-star"></i>
-                                <span>{{ $unit->rating ?? '4.8' }} ({{ $unit->reviews_count ?? '124' }})</span>
+                        <!-- Features -->
+                        @if($unit->amenities->count())
+                            <div class="car-features mt-2">
+                                @foreach($unit->amenities as $amenity)
+                                    <span class="car-feature">
+                                        <i class="{{ $amenity->icon ?? 'fas fa-check' }}"></i> 
+                                        {{ $amenity->name }}
+                                    </span>
+                                @endforeach
                             </div>
-                            <button class="btn btn-primary btn-sm">Book Now</button>
+                        @endif
+
+                        <!-- Actions -->
+                        <div class="car-actions mt-3 d-flex justify-content-between align-items-center">
+                            <div class="car-rating">
+                                <i class="fas fa-star text-warning"></i>
+                                <span>
+                                    {{ $unit->rating ?? '4.8' }} 
+                                    ({{ $unit->reviews_count ?? '124' }})
+                                </span>
+                            </div>
+                            <button class="btn btn-primary btn-sm" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#bookingModal-{{ $unit->id }}">
+                                Book Now
+                            </button>
+                        </div>
+
+                    </div> <!-- /.car-info -->
+                </div> <!-- /.car-card -->
+            </div>
+
+            <!-- Booking Modal -->
+           <div class="modal fade" id="bookingModal-{{ $unit->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Book {{ $unit->name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form action="{{ route('car_hire_booking.store') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+
+                    <!-- Hidden Unit ID -->
+                    <input type="hidden" name="unit_id" value="{{ $unit->id }}">
+                    
+                    <!-- Pickup Location -->
+                    <div class="mb-3">
+                        <label for="pickupLocation-{{ $unit->id }}" class="form-label">Pickup Location</label>
+                        <input type="text" class="form-control" id="pickupLocation-{{ $unit->id }}" 
+                               name="pickup" required>
+                    </div>
+
+                    <!-- Destination -->
+                    <div class="mb-3">
+                        <label for="destination-{{ $unit->id }}" class="form-label">Destination</label>
+                        <input type="text" class="form-control" id="destination-{{ $unit->id }}" 
+                               name="destination" required>
+                    </div>
+
+                    <!-- Dates -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="pickupDate-{{ $unit->id }}" class="form-label">Pickup Date</label>
+                            <input type="date" class="form-control booking-date" 
+                                   id="pickupDate-{{ $unit->id }}" 
+                                   name="check_in"
+                                   data-unit-id="{{ $unit->id }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="returnDate-{{ $unit->id }}" class="form-label">Return Date</label>
+                            <input type="date" class="form-control booking-date" 
+                                   id="returnDate-{{ $unit->id }}" 
+                                   name="check_out"
+                                   data-unit-id="{{ $unit->id }}" required>
                         </div>
                     </div>
+
+                    <!-- Guests -->
+                    <div class="mb-3">
+                        <label for="guests-{{ $unit->id }}" class="form-label">Number of Guests</label>
+                        <input type="number" class="form-control" id="guests-{{ $unit->id }}" 
+                               name="guests" min="1" value="1" required>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="mb-3">
+                        <label class="form-label">Payment Method</label>
+                        <select class="form-select" name="method" required>
+                            <option value="Cash">Cash</option>
+                            <option value="mobile_money_payment">Mobile Money</option>
+                            <option value="card">Card</option>
+                            <option value="bank_transfer">Bank Transfer</option>
+                        </select>
+                    </div>
+
+                    <!-- Total Amount -->
+                    <div class="alert alert-info mt-3">
+                        <strong>Total:</strong>
+                        ZMW <span id="totalAmount-{{ $unit->id }}">0.00</span>
+                        ({{ number_format($unit->price_per_day, 2) }} per day)
+                    </div>
+
+                    <!-- Hidden field for total -->
+                    <input type="hidden" name="amount" id="hiddenTotal-{{ $unit->id }}">
+
                 </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Confirm Booking</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
             </div>
         @endforeach
     @endforeach
 </div>
+    </section>
 
-
-</div>
-
-    </div>
 
     <!-- Mobile Bottom Nav -->
    
@@ -1291,6 +1422,45 @@
             @include('userdashboard.footer') 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
    <script>
+
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll(".booking-date").forEach(function(input) {
+        input.addEventListener("change", function() {
+            let unitId = this.dataset.unitId;
+            let pickup = document.getElementById("pickupDate-" + unitId).value;
+            let ret = document.getElementById("returnDate-" + unitId).value;
+
+            let totalSpan = document.getElementById("totalAmount-" + unitId);
+
+            if (pickup && ret) {
+                let start = new Date(pickup);
+                let end = new Date(ret);
+
+                // Calculate difference in days
+                let diff = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+
+                // Treat same-day booking as 1 night
+                if (diff <= 0) {
+                    diff = 1;
+                }
+
+                let perDay = parseFloat({{ $unit->price_per_day }});
+                let total = perDay * diff;
+
+                totalSpan.innerText = total.toFixed(2);
+
+                // Optional: store in hidden input if you want to submit total
+                let hiddenInput = document.getElementById("hiddenTotal-" + unitId);
+                if(hiddenInput) hiddenInput.value = total.toFixed(2);
+            } else {
+                // Clear total if dates are incomplete
+                totalSpan.innerText = "0.00";
+                let hiddenInput = document.getElementById("hiddenTotal-" + unitId);
+                if(hiddenInput) hiddenInput.value = "";
+            }
+        });
+    });
+});
       function updateMainImage(thumb) {
         const mainImg = document.getElementById('mainGalleryImg');
         mainImg.src = thumb.src;

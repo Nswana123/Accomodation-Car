@@ -149,6 +149,58 @@ public function store(Request $request)
             ->withInput();
     }
 }
+public function carHireBookingStore(Request $request)
+{
+    // Validate the booking data
+    $validated = $request->validate([
+        'unit_id'    => 'required|exists:units,id',
+        'pickup'     => 'required|string|max:255',
+        'destination'=> 'required|string|max:255',
+        'check_in'   => 'required|date|after_or_equal:today',
+        'check_out'  => 'required|date|after_or_equal:check_in',
+        'guests'     => 'required|integer|min:1',
+        'method'     => 'required|in:Cash,mobile_money_payment,card,bank_transfer',
+    ]);
+
+    try {
+        // Get the unit
+        $unit = Unit::findOrFail($request->unit_id);
+
+        // Calculate stay duration and total price
+        $checkIn  = new \DateTime($request->check_in);
+        $checkOut = new \DateTime($request->check_out);
+        $interval = $checkIn->diff($checkOut);
+        $nights   = $interval->days;
+
+        // Treat same-day booking as 1 night
+        if ($nights === 0) {
+            $nights = 1;
+        }
+
+        $totalPrice = $unit->price_per_day * $nights;
+
+        // Create the booking
+        $booking = Booking::create([
+            'customer_id'   => Auth::id(),
+            'unit_id'       => $request->unit_id,
+            'pickup'        => $request->pickup,
+            'destination'   => $request->destination,
+            'check_in_date' => $request->check_in,
+            'check_out_date'=> $request->check_out,
+            'guests'        => $request->guests,
+            'method'        => $request->method,
+            'booking_no'    => $this->generateBookingNumber(),
+            'total_price'   => $totalPrice,
+            'status'        => 'Pending',
+        ]);
+
+        return redirect()->back()->with('success', 'Booking created successfully!');
+    } catch (\Exception $e) {
+        return redirect()->back()
+            ->with('error', 'Error processing booking: ' . $e->getMessage())
+            ->withInput();
+    }
+}
 
 protected function generateBookingNumber()
 {

@@ -222,7 +222,7 @@
                         </p>
 
                         <div class="d-flex justify-content-between align-items-center">
-                            <a href="{{ route('accommodation.show', $provider->id) }}" class="btn btn-sm btn-outline-primary">View</a>
+                            <a href="{{ route('car_hire.show', $provider->id) }}" class="btn btn-sm btn-outline-primary">View</a>
                             <button class="btn btn-sm btn-light"><i class="far fa-heart"></i></button>
                         </div>
 
