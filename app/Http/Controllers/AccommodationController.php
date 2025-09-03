@@ -79,7 +79,7 @@ public function showCarhire($id)
         'images',
         'unitType.units' => function($query) {
             $query->where('status', 'Available')
-                  ->select('id', 'name', 'price_per_day', 'unit_type_id', 'capacity');
+                  ->select('*');
         },
         'amenities'
     ])->findOrFail($id);

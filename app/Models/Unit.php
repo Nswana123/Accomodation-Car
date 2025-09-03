@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Unit extends Model
 {
-    protected $fillable = [ 'unit_type_id', 'name', 'unit_type', 'capacity', 'is_suite', 'price_per_day', 'status', 'description'];
+    protected $fillable = [ 'unit_type_id', 'name', 'unit_type','car_type','transmission','fuel_type','capacity', 'is_suite', 'price_per_day', 'status', 'description'];
 
     
     public function unitType()

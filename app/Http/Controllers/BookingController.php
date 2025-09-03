@@ -7,6 +7,7 @@ use App\Models\UnitType;
 use App\Models\Booking;
 use App\Models\Payment;
 use Carbon\Carbon;
+use App\Models\UnitSuite;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
@@ -99,11 +100,16 @@ public function store(Request $request)
         // Get the unit
         $unit = Unit::findOrFail($request->unit_id);
         
-        // Calculate dates and total price
-        $checkIn = new \DateTime($request->check_in);
+       $checkIn  = new \DateTime($request->check_in);
         $checkOut = new \DateTime($request->check_out);
         $interval = $checkIn->diff($checkOut);
-        $nights = $interval->days;
+        $nights   = $interval->days;
+
+        // Treat same-day booking as 1 night
+        if ($nights === 0) {
+            $nights = 1;
+        }
+
         $totalPrice = $unit->price_per_day * $nights;
 
         // Create the booking
@@ -210,4 +216,80 @@ protected function generateBookingNumber()
 
     return $bookingNo;
 }
+public function BookSuitePackage(Request $request)
+{
+    $validated = $request->validate([
+        'suite_id' => 'required|exists:unit_suites,id',
+        'check_in' => 'required|date|after_or_equal:today',
+        'check_out' => 'required|date|after_or_equal:check_in',
+        'pickup'     => 'required|string|max:255',
+        'destination'=> 'required|string|max:255',
+        'guests' => 'required|integer|min:1',
+        'method' => 'required|in:Cash,mobile_money_payment,card,bank_transfer',
+        'amount' => 'required|numeric|min:0',
+        'payment_number' => 'required_if:method,mobile_money_payment',
+        'reference' => 'required_if:method,mobile_money_payment,bank_transfer',
+        'cardNumber' => 'required_if:method,card',
+        'cardExpiry' => 'required_if:method,card',
+        'cardCVC' => 'required_if:method,card',
+        'bankName' => 'required_if:method,bank_transfer',
+        'accountNumber' => 'required_if:method,bank_transfer',
+    ]);
+
+    try {
+        $unit = UnitSuite::findOrFail($request->suite_id);
+
+       $checkIn  = new \DateTime($request->check_in);
+        $checkOut = new \DateTime($request->check_out);
+        $interval = $checkIn->diff($checkOut);
+        $nights   = $interval->days;
+
+        // Treat same-day booking as 1 night
+        if ($nights === 0) {
+            $nights = 1;
+        }
+
+        $totalPrice = $unit->total_price_per_day * $nights;
+        // Create booking
+        $booking = Booking::create([
+            'customer_id' => Auth::id(),
+            'suite_id' => $request->suite_id,
+            'check_in_date' => $request->check_in,
+            'check_out_date' => $request->check_out,
+            'pickup'        => $request->pickup,
+            'destination'   => $request->destination,
+            'guests' => $request->guests,
+            'booking_no' => $this->generateBookingNumber(),
+            'total_price' => $totalPrice,
+            'status' => 'Pending',
+        ]);
+
+        $paymentMethodMap = [
+            'mobile_money_payment' => 'Mobile Money',
+            'bank_transfer' => 'Bank Transfer',
+            'card' => 'Card',
+            'Cash' => 'Cash',
+        ];
+        $paymentMethod = $paymentMethodMap[$request->method];
+
+        // Create payment
+        $payment = Payment::create([
+            'booking_id' => $booking->id,
+            'amount' => $totalPrice,
+            'payment_method' => $paymentMethod,
+            'reference_number' => $request->reference ?? ($paymentMethod === 'Cash' ? 'CASH-' . time() : null),
+            'status' => $paymentMethod === 'Cash' ? 'Completed' : 'Pending',
+        ]);
+
+        if ($payment->status === 'Completed') {
+            $booking->update(['status' => 'Confirmed']);
+        }
+
+        return redirect()->back()->with('success', 'Booking and payment processed successfully!');
+
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Error processing booking: ' . $e->getMessage())->withInput();
+    }
+}
+
 }

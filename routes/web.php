@@ -99,7 +99,7 @@ Route::get('/get-units/{unitTypeId}', [BookingController::class, 'getUnits']);
 Route::post('/bookings/pay', [BookingController::class, 'processPayment'])->name('bookings.store');
 Route::post('/car-hire-booking', [BookingController::class, 'carHireBookingStore'])
     ->name('car_hire_booking.store');
-
+Route::post('/bookings/process-payment', [BookingController::class, 'BookSuitePackage'])->name('bookings.processPayment');
 });
 
 Route::get('/accommodation', [AccommodationController::class, 'index'])->name('accommodation.index');

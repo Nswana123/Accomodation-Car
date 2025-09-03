@@ -2,7 +2,7 @@
 <html lang="en">
   @include('userdashboard.layout')
   <style>
-      :root {
+        :root {
             --primary: #2563eb;
             --primary-dark: #1d4ed8;
             --text: #1f2937;
@@ -275,14 +275,11 @@
             padding: 1.5rem;
             box-shadow: var(--shadow-md);
             margin-bottom: 2rem;
+              max-width: 100%;
+    margin: 0 auto;
         }
 
-        .filter-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-
+     
         .filter-group {
             margin-bottom: 1rem;
         }
@@ -308,6 +305,37 @@
             display: flex;
             justify-content: center;
         }
+
+        .search-filters {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.filter-grid {
+    display: flex;
+    flex-wrap: wrap; /* allows wrapping on small screens */
+    gap: 1rem; /* spacing between filters */
+    align-items: flex-end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group label {
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+.filter-group select {
+    padding: 6px;
+    min-width: 150px;
+}
+
+.search-btn button {
+    padding: 10px 20px;
+}
 
         /* Car listings */
         .section-title {
@@ -668,559 +696,49 @@
                 grid-template-columns: 1fr;
             }
         }
-.hotel-header {
-    height: 500px;
+
+        .car-image-container {
     position: relative;
-    overflow: hidden;
-    border-radius: 10px;
-}
-
-.carousel-background {
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-}
-
-.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.55);
-    z-index: 1;
-}
-
-.hotel-header-content {
-    position: relative;
-    z-index: 2;
-}
- .hotel-gallery {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .gallery-main {
-        width: 100%;
-        max-width: 800px;
-        overflow: hidden;
-        border-radius: 10px;
-    }
-
-    .main-img {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-    }
-
-    .gallery-thumbnails {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .gallery-thumb {
-        width: 120px;
-        height: 80px;
-        overflow: hidden;
-        cursor: pointer;
-        border: 2px solid transparent;
-        border-radius: 5px;
-    }
-
-    .gallery-thumb:hover,
-    .gallery-thumb.active {
-        border-color: #007bff;
-    }
-
-    .thumb-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
-
-    .thumb-img:hover {
-        transform: scale(1.05);
-    }
-    .amenities-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: flex-start;
-}
-
-.amenity-card {
-    flex: 0 0 12.5%; /* 8 cards per row */
-    box-sizing: border-box;
-    background: #f8f9fa; /* light background */
-    border-radius: 8px;
-    padding: 15px 10px;
-    text-align: center;
-    cursor: default;
-    transition: background-color 0.3s ease;
-}
-
-.amenity-card:hover {
-    background-color: #e2e6ea;
-}
-
-.amenity-icon {
-    font-size: 2.2rem;
-    color: #007bff; /* bootstrap primary color */
-    margin-bottom: 8px;
-}
-
-.amenity-name {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #212529; /* dark text */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-/* Room Card Styling */
-.section {
-    padding: 40px 0;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.section-title {
-    font-size: 28px;
-    margin-bottom: 30px;
-    color: #333;
-    text-align: center;
-}
-
-.room-types {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-
-.room-card {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
-
-.room-summary {
-    display: flex;
-    padding: 20px;
-    gap: 20px;
-}
-
-.room-image-container {
-    width: 300px;
-    height: 200px;
-    flex-shrink: 0;
-    border-radius: 6px;
-    overflow: hidden;
-}
-
-.room-image {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.room-info {
-    flex: 1;
+    height: 200px; /* fixed height for consistency */
+    background: #f8f9fa; /* light background so "contain" images don’t float oddly */
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.room-header {
-    margin-bottom: 10px;
-}
-
-.room-name {
-    font-size: 22px;
-    margin: 0 0 5px 0;
-    color: #222;
-}
-
-.room-availability {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #555;
-    font-size: 14px;
-}
-
-.room-availability i {
-    color: #666;
-}
-
-.room-price-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.room-price {
-    font-size: 20px;
-    font-weight: 600;
-    color: #222;
-    margin: 0;
-}
-
-.price-subtext {
-    font-size: 14px;
-    font-weight: normal;
-    color: #666;
-}
-
-.toggle-details {
-    background: none;
-    border: none;
-    color: #0066cc;
-    cursor: pointer;
-    font-size: 14px;
-    padding: 5px 10px;
-    border-radius: 4px;
-}
-
-.toggle-details:hover {
-    background: #f0f7ff;
-}
-
-.room-details {
-    padding: 0 20px 20px 20px;
-    border-top: 1px solid #eee;
-    margin-top: 10px;
-}
-
-.room-description {
-    color: #555;
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-.room-amenities {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 25px;
-}
-
-.room-amenity {
-    background: #f5f5f5;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-    color: #444;
-}
-
-/* Booking Form Styling */
-.booking-form {
-    background: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-}
-
-.form-title {
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 18px;
-    color: #333;
-}
-
-.form-row {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 15px;
-}
-
-.form-group {
-    flex: 1;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
-    color: #555;
-    font-weight: 500;
-}
-
-.form-control {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    background: white;
-}
-
-.date-input {
-    position: relative;
-}
-
-.date-placeholder {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #999;
-    font-size: 14px;
-    pointer-events: none;
-}
-
-.form-control[type="date"] {
-    position: relative;
-    color: transparent; /* Hide the default text */
-}
-
-.form-control[type="date"]:focus {
-    color: inherit; /* Show text when focused */
-}
-
-.booking-form-container {
-    margin-top: 20px;
-    background: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-}
-
-.booking-form-layout {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-}
-
-.form-fields-column {
-    flex: 1;
-    min-width: 300px;
-}
-
-.room-selection-column {
-    flex: 1;
-    min-width: 300px;
-}
-
-.form-submit-column {
-    flex-basis: 100%;
-}
-
-.unit-selection-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 15px;
-    margin-top: 15px;
-}
-
-.unit-card {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-}
-
-.unit-select-label {
-    display: block;
-    cursor: pointer;
-    padding: 15px;
-}
-
-.unit-radio {
-    display: none;
-}
-
-.unit-radio:checked + .unit-card-content {
-    border: 2px solid #0066cc;
-    background-color: #f0f7ff;
-}
-
-.unit-card-content {
-    padding: 10px;
-    border-radius: 6px;
-    border: 2px solid transparent;
-}
-
-.unit-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.unit-header h6 {
-    margin: 0;
-    font-size: 16px;
-    color: #333;
-}
-
-.unit-price {
-    font-weight: bold;
-    color: #0066cc;
-}
-
-.unit-details {
-    font-size: 14px;
-    color: #555;
-}
-
-.unit-feature {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 5px;
-}
-
-.unit-feature i {
-    color: #666;
-    width: 16px;
-    text-align: center;
-}
-
-.date-input {
-    position: relative;
-}
-
-.date-placeholder {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #999;
-    font-size: 14px;
-    pointer-events: none;
-}
-
-.form-control[type="date"] {
-    position: relative;
-    color: transparent;
-}
-
-.form-control[type="date"]:focus {
-    color: inherit;
-}
-
-.book-now-btn {
-    background: #0066cc;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 4px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    width: 100%;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 8px;
-    transition: background 0.2s;
-    margin-top: 20px;
+    align-items: center;
 }
 
-.book-now-btn:hover {
-    background: #0052a3;
+.car-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* show full image without cropping */
 }
 
-.book-now-btn i {
-    font-size: 14px;
-}
-.select-with-badges option {
-    padding: 8px 12px;
-    border-bottom: 1px solid #eee;
-}
-
-.option-main {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 3px;
+.car-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #ff4757;
+    color: white;
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 12px;
+    font-weight: bold;
 }
 
-.price-badge {
-    float: right;
-    background: #f0f7ff;
-    color: #0066cc;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.9em;
-}
-
-.option-details {
-    display: block;
-    font-size: 0.85em;
-    color: #666;
-}
-</style>
+    </style>
 <body>
     
   @include('userdashboard.header')
 
     <!-- Main Content -->
-<main class="main-content" role="main">
-    <div id="hotelHeaderCarousel" class="carousel slide hotel-header" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            @foreach($provider->images as $key => $image)
-                <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                    <div class="carousel-background" style="background-image: url('{{ asset('storage/' . $image->image) }}');">
-                        <div class="overlay"></div>
+ <main class="main-content" role="main">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Find Your Perfect Rental Car in Zambia</h1>
+            <p>Explore Zambia at your own pace with our wide selection of vehicles at competitive prices</p>
+            <a href="#" class="btn btn-primary">Browse Cars</a>
+        </section>
 
-                        <!-- Hotel Header Content Overlay -->
-                        <div class="hotel-header-content text-white d-flex flex-column justify-content-center h-100 p-5">
-                            <h1 class="hotel-title">{{ $provider->name }}</h1>
-
-                            <div class="hotel-location-rating my-2">
-                                <div class="hotel-location mb-1">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>{{ $provider->location }}</span>
-                                </div>
-                                <div class="hotel-rating">
-                                    <div class="stars text-warning">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                        <i class="fas fa-star-half-alt"></i>
-                                    </div>
-                                    <span class="text-light">4.6 (342 reviews)</span>
-                                </div>
-                            </div>
-
-                            @php
-                                $iconMap = [
-                                    'luxury' => 'fas fa-crown',
-                                    'free wifi' => 'fas fa-wifi',
-                                    'swimming pool' => 'fas fa-swimming-pool',
-                                    'spa' => 'fas fa-spa',
-                                    'restaurant' => 'fas fa-utensils',
-                                    'gym' => 'fas fa-dumbbell',
-                                    'bar' => 'fas fa-glass-martini-alt',
-                                    'parking' => 'fas fa-parking',
-                                    'air conditioning' => 'fas fa-fan',
-                                    'laundry' => 'fas fa-soap',
-                                    'tv' => 'fas fa-tv',
-                                    'pet friendly' => 'fas fa-dog',
-                                ];
-                            @endphp
-
-                            <div class="hotel-badges mt-3 d-flex flex-wrap">
-                                @foreach($provider->amenities as $amenity)
-                                    @php
-                                        $name = is_object($amenity) ? strtolower($amenity->name) : strtolower($amenity);
-                                        $icon = $iconMap[$name] ?? 'fas fa-check-circle';
-                                    @endphp
-                                    <div class="badge bg-light text-dark me-2 mb-2 px-3 py-1 rounded-pill d-flex align-items-center gap-2">
-                                        <i class="{{ $icon }}"></i>
-                                        <span>{{ ucwords($name) }}</span>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </div>
 
     <!-- Featured Cars -->
     <section class="mt-5">
@@ -1245,12 +763,12 @@
         {{ session('success') }}
     </div>
 @endif 
-     <div class="row">
+   <div class="row">
     @foreach($provider->unitType as $type)
         @foreach($type->units as $unit)
-            <div class="col-md-3 mb-4"> <!-- 4 columns per row -->
-                <div class="car-card">
-                    
+            <div class="col-md-3 mb-4">
+                <div class="car-card shadow-sm rounded overflow-hidden h-100">
+
                     <!-- Car Image -->
                     <div class="car-image-container">
                         @if($unit->images->count())
@@ -1266,34 +784,27 @@
                     </div>
 
                     <!-- Car Info -->
-                    <div class="car-info">
-                        
+                    <div class="car-info p-3">
                         <!-- Title & Price -->
                         <div class="car-title d-flex justify-content-between align-items-center">
-                            <h3 class="mb-0">{{ $unit->name }}</h3>
-                            <span class="car-price">
+                            <h5 class="mb-0">{{ $unit->name }}</h5>
+                            <span class="car-price text-primary fw-bold">
                                 ZMW {{ number_format($unit->price_per_day, 2) }}/day
                             </span>
                         </div>
 
                         <!-- Specs -->
-                        <div class="car-specs mt-2">
-                            <span class="car-spec">
-                                <i class="fas fa-car"></i> {{ $unit->type ?? 'N/A' }}
-                            </span>
-                            <span class="car-spec">
-                                <i class="fas fa-cogs"></i> {{ $unit->transmission ?? 'N/A' }}
-                            </span>
-                            <span class="car-spec">
-                                <i class="fas fa-gas-pump"></i> {{ $unit->fuel_type ?? 'N/A' }}
-                            </span>
+                        <div class="car-specs mt-2 d-flex flex-wrap gap-2 text-muted small">
+                            <span><i class="fas fa-car"></i> {{ $unit->car_type ?? 'N/A' }}</span>
+                            <span><i class="fas fa-cogs"></i> {{ $unit->transmission ?? 'N/A' }}</span>
+                            <span><i class="fas fa-gas-pump"></i> {{ $unit->fuel_type ?? 'N/A' }}</span>
                         </div>
 
                         <!-- Features -->
                         @if($unit->amenities->count())
-                            <div class="car-features mt-2">
+                            <div class="car-features mt-2 small">
                                 @foreach($unit->amenities as $amenity)
-                                    <span class="car-feature">
+                                    <span class="badge bg-light text-dark border">
                                         <i class="{{ $amenity->icon ?? 'fas fa-check' }}"></i> 
                                         {{ $amenity->name }}
                                     </span>
@@ -1303,12 +814,9 @@
 
                         <!-- Actions -->
                         <div class="car-actions mt-3 d-flex justify-content-between align-items-center">
-                            <div class="car-rating">
+                            <div class="car-rating small text-muted">
                                 <i class="fas fa-star text-warning"></i>
-                                <span>
-                                    {{ $unit->rating ?? '4.8' }} 
-                                    ({{ $unit->reviews_count ?? '124' }})
-                                </span>
+                                <span>{{ $unit->rating ?? '4.8' }} ({{ $unit->reviews_count ?? '124' }})</span>
                             </div>
                             <button class="btn btn-primary btn-sm" 
                                     data-bs-toggle="modal" 
@@ -1316,10 +824,10 @@
                                 Book Now
                             </button>
                         </div>
-
-                    </div> <!-- /.car-info -->
-                </div> <!-- /.car-card -->
+                    </div>
+                </div>
             </div>
+ 
 
             <!-- Booking Modal -->
            <div class="modal fade" id="bookingModal-{{ $unit->id }}" tabindex="-1" aria-hidden="true">
