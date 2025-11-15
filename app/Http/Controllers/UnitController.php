@@ -13,7 +13,7 @@ class UnitController extends Controller
 {
     public function index()
     {
-        $units = Unit::with([ 'unitType', 'images','amenities'])->latest()->get();
+        $units = Unit::with([ 'unitType', 'images','amenities'])->latest()->get(); 
           $user = auth()->user();
     $permissions = $user->user_group->permissions;
         return view('units.index', compact('units','permissions'));
@@ -46,7 +46,7 @@ class UnitController extends Controller
         'name', 'unit_type_id', 'capacity', 'price_per_day', 'description'
     ]));
        if ($request->has('amenities')) {
-            $unitType->amenities()->attach($request->amenities);
+            $unit->amenities()->attach($request->amenities);
         }
 
     if ($request->hasFile('images')) {
