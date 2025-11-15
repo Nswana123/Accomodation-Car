@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Booking extends Model
 {
-    protected $fillable = ['booking_no','customer_id', 'unit_id', 'suite_id','pickup','destination','check_in_date', 'guests', 'check_out_date', 'total_price', 'status'];
+    protected $fillable = ['booking_no','customer_id', 'unit_id', 'suite_id','pickup','destination','check_in_date', 'guests', 'check_out_date', 'total_price', 'status','user_check_in_date','user_check_out_date'];
 
     public function customer()
     {
@@ -26,5 +26,9 @@ class Booking extends Model
     {
         return $this->hasMany(Payment::class);
     }
-    
+      // Scope for Pending bookings
+    public function scopePending($query)
+    {
+        return $query->where('status', 'Pending');
+    }
 }

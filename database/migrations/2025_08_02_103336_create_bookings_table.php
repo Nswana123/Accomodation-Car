@@ -19,6 +19,8 @@ class CreateBookingsTable extends Migration
             $table->date('check_out_date');
             $table->string('guests');
              $table->string('booking_no')->nullable();
+             $table->string('user_check_in_date')->nullable();
+             $table->string('user_check_out_date')->nullable();
             $table->decimal('total_price', 10, 2);
             $table->enum('status', ['Pending', 'Confirmed', 'Cancelled', 'Checked-In', 'Checked-Out'])->default('Pending');
             $table->timestamps();

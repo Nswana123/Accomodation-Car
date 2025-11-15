@@ -100,6 +100,20 @@ Route::post('/bookings/pay', [BookingController::class, 'processPayment'])->name
 Route::post('/car-hire-booking', [BookingController::class, 'carHireBookingStore'])
     ->name('car_hire_booking.store');
 Route::post('/bookings/process-payment', [BookingController::class, 'BookSuitePackage'])->name('bookings.processPayment');
+
+Route::get('/bookings/pending', [BookingController::class, 'pendingBooking'])->name('bookings.pending');
+Route::get('/bookings/{id}', [BookingController::class, 'show'])->name('bookings.show');
+
+Route::post('/bookings/{id}/confirm', [BookingController::class, 'confirm'])->name('bookings.confirm');
+Route::post('/bookings/{id}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+
+Route::get('/confirmedBookings', [BookingController::class, 'confirmedBookings'])->name('bookings.confirmed');
+Route::get('/showConfirmedBookings/{id}', [BookingController::class, 'showConfirmedBookings'])->name('bookings.showConfirmedBookings');
+Route::post('/bookings/{id}/check-in', [BookingController::class, 'checkIn'])->name('bookings.checkin');
+Route::get('/checked-in-bookings', [BookingController::class, 'checkedIn'])->name('bookings.checked_in');
+Route::get('/showCheckedIn/{id}', [BookingController::class, 'showCheckedIn'])->name('bookings.showCheckedIn');
+Route::post('/bookings/{id}/check-out', [BookingController::class, 'checkOut'])->name('bookings.checkout');
+
 });
 
 Route::get('/accommodation', [AccommodationController::class, 'index'])->name('accommodation.index');

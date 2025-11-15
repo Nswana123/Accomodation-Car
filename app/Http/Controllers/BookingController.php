@@ -291,5 +291,182 @@ public function BookSuitePackage(Request $request)
         return redirect()->back()->with('error', 'Error processing booking: ' . $e->getMessage())->withInput();
     }
 }
+    public function pendingBooking()
+    {
+        $bookings = Booking::with(['customer', 'unit', 'suite', 'payments'])
+            ->where('status', 'Pending')
+            ->latest()
+            ->get();
+    $user = auth()->user();
+    $permissions = $user->user_group->permissions;
+
+        return view('bookings.pending', compact('bookings','permissions'));
+    }
+
+      public function show($id)
+    {
+        $booking = Booking::with(['customer', 'unit', 'suite', 'payments'])->findOrFail($id);
+         $user = auth()->user();
+    $permissions = $user->user_group->permissions;
+
+
+        return view('bookings.show', compact('booking','permissions'));
+    }
+
+ public function confirm($id)
+{
+    $booking = Booking::findOrFail($id);
+
+    // Confirm the booking
+    $booking->status = 'Confirmed';
+    $booking->save();
+
+    // If booking is for a Unit
+    if ($booking->unit_id) {
+        $unit = Unit::find($booking->unit_id);
+        if ($unit) {
+            $unit->status = 'Booked';
+            $unit->save();
+        }
+    }
+
+    // If booking is for a Suite
+    if ($booking->suite_id) {
+        $unitIds = \DB::table('unit_suite_items')
+            ->where('suite_id', $booking->suite_id)
+            ->pluck('unit_id'); // get all unit_ids inside the suite
+
+        foreach ($unitIds as $unitId) {
+            $unit = Unit::find($unitId);
+            if ($unit) {
+                $unit->status = 'Booked';
+                $unit->save();
+            }
+        }
+    }
+
+    // Set all related payments to Completed
+    foreach ($booking->payments as $payment) {
+        $payment->status = 'Completed';
+        $payment->save();
+    }
+
+    return redirect()->route('bookings.show', $id)->with('success', 'Booking confirmed successfully.');
+}
+
+
+
+    public function cancel($id)
+    {
+        $booking = Booking::findOrFail($id);
+        $booking->status = 'Cancelled';
+        $booking->save();
+
+        return redirect()->route('bookings.show', $id)->with('success', 'Booking cancelled successfully.');
+    }
+
+    // BookingController.php
+public function confirmedBookings()
+{
+    $bookings = Booking::with(['customer', 'unit', 'suite', 'payments'])
+        ->where('status', 'Confirmed')
+        ->orderBy('created_at', 'desc')
+        ->get();
+          $user = auth()->user();
+    $permissions = $user->user_group->permissions;
+
+    return view('bookings.confirmed', compact('bookings','permissions'));
+}
+public function showConfirmedBookings($id)
+{
+    $booking = Booking::with(['customer', 'unit', 'suite', 'payments'])->findOrFail($id);
+      $user = auth()->user();
+    $permissions = $user->user_group->permissions;
+
+    return view('bookings.showConfirmedBookings', compact('booking','permissions'));
+}
+// BookingController.php
+public function checkIn($id)
+{
+    $booking = Booking::with(['unit', 'suite'])->findOrFail($id);
+
+    // Only allow check-in if status is confirmed
+    if ($booking->status !== 'Confirmed') {
+        return redirect()->route('bookings.show', $id)
+            ->with('error', 'Only confirmed bookings can be checked in.');
+    }
+
+    // Update booking status and set check-in timestamp
+    $booking->status = 'Checked-In';
+    $booking->user_check_in_date = now(); // current date & time
+    $booking->save();
+
+    return redirect()->route('bookings.confirmed') // redirect to confirmed bookings list
+        ->with('success', 'Customer checked in successfully.');
+}
+public function checkedIn()
+{
+    $bookings = Booking::with(['customer', 'unit', 'suite', 'payments'])
+        ->where('status', 'Checked-In')
+        ->orderByDesc('user_check_in_date')
+        ->get();
+          $user = auth()->user();
+    $permissions = $user->user_group->permissions;
+
+    return view('bookings.checked_in', compact('bookings','permissions'));
+    
+}public function showCheckedIn($id)
+{
+    $booking = Booking::with(['customer', 'unit', 'suite', 'payments'])->findOrFail($id);
+      $user = auth()->user();
+    $permissions = $user->user_group->permissions;
+
+    return view('bookings.showCheckedIn', compact('booking','permissions'));
+}
+
+
+public function checkOut($id)
+{
+    $booking = Booking::with(['unit', 'suite'])->findOrFail($id);
+
+    // Only allow check-out if booking is checked-in
+    if ($booking->status !== 'Checked-In') {
+        return redirect()->route('bookings.show', $id)
+            ->with('error', 'Only checked-in bookings can be checked out.');
+    }
+
+    // Update booking status & checkout time
+    $booking->status = 'Checked-Out';
+    $booking->user_check_out_date = now();
+    $booking->save();
+
+    // Free up the unit if single unit booking
+    if ($booking->unit_id) {
+        $unit = Unit::find($booking->unit_id);
+        if ($unit) {
+            $unit->status = 'Available';
+            $unit->save();
+        }
+    }
+
+    // Free up all units if suite booking
+    if ($booking->suite_id) {
+        $unitIds = \DB::table('unit_suite_items')
+            ->where('suite_id', $booking->suite_id)
+            ->pluck('unit_id');
+
+        foreach ($unitIds as $unitId) {
+            $unit = Unit::find($unitId);
+            if ($unit) {
+                $unit->status = 'Available';
+                $unit->save();
+            }
+        }
+    }
+
+    return redirect()->route('bookings.checked_in', $id)
+        ->with('success', 'Customer checked out successfully.');
+}
+
 
 }
